@@ -93,7 +93,7 @@ router.get("/user/:userId/filter", async (req, res) => {
   try {
     const { userId } = req.params;
     const { category } = req.query;
-    const db = await getDB();
+    const db = awaitgetDB();
 
     const query = category === "all" ? { userId } : { userId, category };
 

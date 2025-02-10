@@ -3,6 +3,7 @@ import cors from "cors";
 import { config } from "./config/config.js";
 import { connectDB } from "./config/database.js";
 import careerActivityRouter from "./routes/careerActivityRouter.js";
+import messageRoutes from "./routes/messageRoutes.js"; // 导入留言板路由
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, "frontend")));
 
 // Routes
 app.use("/api/tasks", careerActivityRouter);
+app.use("/api/messages", messageRoutes);
 
 // Serve index.html
 app.get("/", (req, res) => {
