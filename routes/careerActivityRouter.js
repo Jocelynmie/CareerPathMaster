@@ -35,7 +35,7 @@ router.post("/", async (req, res) => {
 router.get("/user/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    const db = getDB();
+    const db = await getDB();
 
     const tasks = await db
       .collection("tasks")
@@ -53,7 +53,7 @@ router.get("/user/:userId", async (req, res) => {
 router.patch("/:taskId/toggle", async (req, res) => {
   try {
     const { taskId } = req.params;
-    const db = getDB();
+    const db = await getDB();
     const task = await db.collection("tasks").findOne({
       _id: new ObjectId(taskId),
     });
@@ -75,7 +75,7 @@ router.patch("/:taskId/toggle", async (req, res) => {
 router.delete("/:taskId", async (req, res) => {
   try {
     const { taskId } = req.params;
-    const db = getDB();
+    const db = await getDB();
     const result = await db.collection("tasks").deleteOne({
       _id: new ObjectId(taskId),
     });
@@ -93,7 +93,7 @@ router.get("/user/:userId/filter", async (req, res) => {
   try {
     const { userId } = req.params;
     const { category } = req.query;
-    const db = getDB();
+    const db = await getDB();
 
     const query = category === "all" ? { userId } : { userId, category };
 

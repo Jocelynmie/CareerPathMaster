@@ -22,7 +22,7 @@ export async function connectDB() {
   }
 }
 
-export function getDB() {
+export async function getDB() {
   if (!db) {
     throw new Error("Database not initialized");
   }
