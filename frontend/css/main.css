@@ -1,0 +1,73 @@
+.career-item {
+  transition: all 0.3s ease;
+}
+
+.career-item:hover {
+  transform: translateX(5px);
+  background-color: #f7fafc;
+}
+
+.completed {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.priority-urgent {
+  border-left: 4px solid #e53e3e; /* Red for urgent */
+}
+
+.priority-important {
+  border-left: 4px solid #ecc94b; /* Yellow for important */
+}
+
+.priority-regular {
+  border-left: 4px solid #48bb78; /* Green for regular */
+}
+
+.navbar {
+  background-color: #2b6cb0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-filter {
+  color: #2b6cb0;
+  border: 1px solid #2b6cb0;
+  background-color: transparent;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.btn-filter:hover {
+  background-color: #2b6cb0;
+  color: white;
+}
+
+.btn-filter.active {
+  background-color: #2b6cb0;
+  color: white;
+}
+
+.btn-group .btn-filter:not(:last-child) {
+  border-right: none;
+}
+
+/* Category-specific styling */
+.category-applications {
+  background-color: #ebf8ff;
+}
+
+.category-interviews {
+  background-color: #e6fffa;
+}
+
+.category-networking {
+  background-color: #faf5ff;
+}
+
+.category-skills {
+  background-color: #f0fff4;
+}
+
+.category-documents {
+  background-color: #fff5f5;
+}
