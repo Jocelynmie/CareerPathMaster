@@ -1,74 +1,130 @@
-// JavaScript to handle form submission, display messages, and pagination
 const messageForm = document.getElementById("messageForm");
 const messageInput = document.getElementById("messageInput");
 const messageList = document.getElementById("messageList");
 const prevButton = document.getElementById("prevButton");
 const nextButton = document.getElementById("nextButton");
 const pageInfo = document.getElementById("pageInfo");
-
-// Load saved messages from localStorage
-let messages = JSON.parse(localStorage.getItem("messages")) || [];
+const submitButton = document.getElementById("submitButton");
 
 // Pagination variables
 let currentPage = 1;
-const messagesPerPage = 5; // Number of messages per page
+const messagesPerPage = 5;
 
-// Function to display messages for the current page
-function displayMessages() {
-  const startIndex = (currentPage - 1) * messagesPerPage;
-  const endIndex = startIndex + messagesPerPage;
-  const messagesToShow = messages.slice(startIndex, endIndex);
+// Function to fetch messages from the server
+async function fetchMessages(page = 1) {
+  try {
+    const response = await fetch(
+      `/api/messages?page=${page}&limit=${messagesPerPage}`
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch messages");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching messages:", error);
+    return { messages: [], totalPages: 0, currentPage: 1 };
+  }
+}
 
-  messageList.innerHTML = messagesToShow
-    .map(
-      (message, index) => `
-    <div class="message">
-        <p>${message}</p>
-    </div>
-`
-    )
-    .join("");
+// Function to display messages
+async function displayMessages() {
+  // Show loading state
+  messageList.innerHTML = '<div class="loading">Loading messages...</div>';
 
-  // Update pagination buttons and page info
-  pageInfo.textContent = `Page ${currentPage} of ${Math.ceil(
-    messages.length / messagesPerPage
-  )}`;
-  prevButton.disabled = currentPage === 1;
-  nextButton.disabled =
-    currentPage === Math.ceil(messages.length / messagesPerPage);
+  try {
+    const data = await fetchMessages(currentPage);
+
+    if (data.messages.length === 0) {
+      messageList.innerHTML =
+        '<div class="no-messages">No messages yet. Be the first to add one!</div>';
+      return;
+    }
+
+    messageList.innerHTML = data.messages
+      .map(
+        (message) => `
+        <div class="message">
+          <p class="message-content">${message.content}</p>
+          <div class="message-footer">
+            <small class="message-date">${new Date(
+              message.createdAt
+            ).toLocaleString()}</small>
+          </div>
+        </div>
+      `
+      )
+      .join("");
+
+    // Update pagination info
+    pageInfo.textContent = `Page ${data.currentPage} of ${data.totalPages}`;
+    prevButton.disabled = currentPage === 1;
+    nextButton.disabled =
+      currentPage === data.totalPages || data.totalPages === 0;
+  } catch (error) {
+    console.error("Error displaying messages:", error);
+    messageList.innerHTML =
+      '<div class="error">Error loading messages. Please try again later.</div>';
+  }
 }
 
 // Function to add a new message
-function addMessage(event) {
+async function addMessage(event) {
   event.preventDefault();
-  const newMessage = messageInput.value.trim();
-  if (newMessage) {
-    messages.push(newMessage);
-    localStorage.setItem("messages", JSON.stringify(messages));
+  const content = messageInput.value.trim();
+
+  if (!content) return;
+
+  // Disable submit button and show loading state
+  submitButton.disabled = true;
+  submitButton.textContent = "Adding...";
+
+  try {
+    const response = await fetch("/api/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to add message");
+    }
+
+    // Clear input and refresh messages
     messageInput.value = "";
-    currentPage = Math.ceil(messages.length / messagesPerPage); // Go to the last page
-    displayMessages();
+    await displayMessages();
+
+    // Optionally, scroll to top of message list
+    messageList.scrollTop = 0;
+  } catch (error) {
+    console.error("Error adding message:", error);
+    alert("Failed to add message. Please try again.");
+  } finally {
+    // Re-enable submit button
+    submitButton.disabled = false;
+    submitButton.textContent = "Add Message";
   }
 }
 
-// Event listener for form submission
+// Event listeners
 messageForm.addEventListener("submit", addMessage);
 
-// Event listener for previous button
-prevButton.addEventListener("click", () => {
+prevButton.addEventListener("click", async () => {
   if (currentPage > 1) {
     currentPage--;
-    displayMessages();
+    await displayMessages();
   }
 });
 
-// Event listener for next button
-nextButton.addEventListener("click", () => {
-  if (currentPage < Math.ceil(messages.length / messagesPerPage)) {
+nextButton.addEventListener("click", async () => {
+  const data = await fetchMessages(currentPage);
+  if (currentPage < data.totalPages) {
     currentPage++;
-    displayMessages();
+    await displayMessages();
   }
 });
 
-// Display messages on page load
+// Load messages when page loads
 displayMessages();

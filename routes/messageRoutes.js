@@ -9,18 +9,23 @@ router.get("/", async (req, res) => {
   try {
     const db = await connectDB();
     const skip = (page - 1) * limit;
-    const messages = await db
-      .collection("messages")
-      .find()
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit)
-      .toArray();
-    const totalMessages = await db.collection("messages").countDocuments();
+
+    const [messages, totalMessages] = await Promise.all([
+      db
+        .collection("messages")
+        .find()
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .toArray(),
+      db.collection("messages").countDocuments(),
+    ]);
+
     res.json({
       messages,
       totalPages: Math.ceil(totalMessages / limit),
       currentPage: page,
+      totalMessages,
     });
   } catch (error) {
     handleDatabaseError(error, "fetching messages");
@@ -28,6 +33,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Add new message
 router.post("/", async (req, res) => {
   const { content } = req.body;
   if (!content) {
