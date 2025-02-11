@@ -40,7 +40,6 @@ export async function closeDB() {
 
 async function createIndexes() {
   try {
-    // 为 tasks 集合创建索引
     await db.collection("tasks").createIndexes([
       {
         key: { userId: 1 },
@@ -64,12 +63,10 @@ async function createIndexes() {
       },
     ]);
 
-    // 为 tasks 集合创建全文索引
     await db
       .collection("tasks")
       .createIndex({ title: "text" }, { name: "text_search_index" });
 
-    // 为 messages 集合创建索引
     await db
       .collection("messages")
       .createIndex({ createdAt: -1 }, { name: "messages_createdAt_index" });

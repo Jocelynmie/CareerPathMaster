@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// 基础激励消息集合
 const motivationalMessages = [
   "Believe you can and you're halfway there.",
   "The future belongs to those who believe in the beauty of their dreams.",
@@ -239,14 +238,12 @@ const motivationalMessages = [
 async function seedDatabase() {
   let client;
   try {
-    // 连接数据库
     const uri = process.env.MONGODB_URI;
     client = await MongoClient.connect(uri);
     const db = client.db(process.env.DB_NAME);
 
     console.log("Connected to database");
 
-    // 准备插入的文档 (1000条)
     const documents = Array.from({ length: 1000 }, () => ({
       content:
         motivationalMessages[
@@ -256,7 +253,6 @@ async function seedDatabase() {
       updatedAt: new Date(),
     }));
 
-    // 批量插入
     const result = await db.collection("messages").insertMany(documents);
 
     console.log(`Successfully inserted ${result.insertedCount} messages`);
@@ -270,5 +266,4 @@ async function seedDatabase() {
   }
 }
 
-// 运行脚本
 seedDatabase();

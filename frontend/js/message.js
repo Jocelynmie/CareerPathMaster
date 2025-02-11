@@ -96,13 +96,11 @@ async function addMessage(event) {
     messageInput.value = "";
     await displayMessages();
 
-    // Optionally, scroll to top of message list
     messageList.scrollTop = 0;
   } catch (error) {
     console.error("Error adding message:", error);
     alert("Failed to add message. Please try again.");
   } finally {
-    // Re-enable submit button
     submitButton.disabled = false;
     submitButton.textContent = "Add Message";
   }
@@ -126,5 +124,4 @@ nextButton.addEventListener("click", async () => {
   }
 });
 
-// Load messages when page loads
 displayMessages();
