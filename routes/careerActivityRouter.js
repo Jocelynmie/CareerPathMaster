@@ -8,7 +8,7 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   try {
     const { title, priority, category, dueDate, userId } = req.body;
-    const db = getDB();
+    const db = await getDB();
 
     const task = {
       title,
