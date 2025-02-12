@@ -31,13 +31,15 @@ async function fetchMessages(page = 1) {
 async function displayMessages() {
   // Show loading state
   messageList.innerHTML = '<div class="loading">Loading messages...</div>';
-
   try {
     const data = await fetchMessages(currentPage);
 
     if (data.messages.length === 0) {
-      messageList.innerHTML =
-        '<div class="no-messages">No messages yet. Be the first to add one!</div>';
+      messageList.innerHTML = `
+        <div class="no-messages">
+          No messages yet. Be the first to add one!
+        </div>
+      `;
       return;
     }
 
@@ -47,20 +49,14 @@ async function displayMessages() {
         <div class="message">
           <p class="message-content">${message.content}</p>
           <div class="message-footer">
-            <small class="message-date">${new Date(
-              message.createdAt
-            ).toLocaleString()}</small>
+            <small class="message-date">
+              ${new Date(message.createdAt).toLocaleString()}
+            </small>
           </div>
         </div>
       `
       )
       .join("");
-
-    // Update pagination info
-    pageInfo.textContent = `Page ${data.currentPage} of ${data.totalPages}`;
-    prevButton.disabled = currentPage === 1;
-    nextButton.disabled =
-      currentPage === data.totalPages || data.totalPages === 0;
   } catch (error) {
     console.error("Error displaying messages:", error);
     messageList.innerHTML =

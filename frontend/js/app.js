@@ -1,16 +1,15 @@
-class Task {
-  constructor(id, title, priority, category, dueDate, completed = false) {
-    this.id = id;
-    this.title = title;
-    this.priority = priority;
-    this.category = category;
-    this.dueDate = dueDate;
-    this.completed = completed;
-  }
-}
 class TaskManager {
   constructor() {
     this.apiUrl = "/api";
+    this.taskList = null;
+    this.categoryMapping = {
+      all: "all",
+      "job search": "job_search",
+      applications: "applications",
+      interviews: "interviews",
+      "skill development": "skill_dev",
+      networking: "networking",
+    };
     this.init();
   }
 
@@ -27,16 +26,28 @@ class TaskManager {
     }
 
     const prioritySelect = document.getElementById("taskPriority");
-    prioritySelect.innerHTML = `
+    if (prioritySelect) {
+      prioritySelect.innerHTML = this.getPriorityOptions();
+    }
+
+    const categorySelect = document.getElementById("taskCategory");
+    if (categorySelect) {
+      categorySelect.innerHTML = this.getCategoryOptions();
+    }
+  }
+
+  getPriorityOptions() {
+    return `
       <option value="">Select Priority</option>
       <option value="p1">P1 - Critical (This Week)</option>
       <option value="p2">P2 - High (Next 2 Weeks)</option>
       <option value="p3">P3 - Medium (This Month)</option>
       <option value="p4">P4 - Low (Flexible)</option>
     `;
+  }
 
-    const categorySelect = document.getElementById("taskCategory");
-    categorySelect.innerHTML = `
+  getCategoryOptions() {
+    return `
       <option value="">Select Category</option>
       <option value="job_search">Job Search</option>
       <option value="applications">Applications</option>
@@ -47,27 +58,55 @@ class TaskManager {
   }
 
   bindEvents() {
+    // Form submission
     const form = document.querySelector("form");
-    form.addEventListener("submit", (e) => this.handleFormSubmit(e));
+    if (form) {
+      form.addEventListener("submit", (e) => this.handleFormSubmit(e));
+    }
 
+    // Filter buttons
     const filterButtons = document.querySelectorAll(".btn-filter");
     filterButtons.forEach((button) => {
       button.addEventListener("click", () => this.handleFilter(button));
     });
+
+    // Task actions using event delegation
+    this.taskList = document.querySelector(".row:last-child .col-md-8");
+    if (this.taskList) {
+      this.taskList.addEventListener("click", (e) => this.handleTaskAction(e));
+    }
+  }
+
+  handleTaskAction(e) {
+    const toggleBtn = e.target.closest(".btn-outline-success");
+    const deleteBtn = e.target.closest(".btn-outline-danger");
+
+    if (toggleBtn) {
+      const taskId = toggleBtn.dataset.taskId;
+      this.toggleTaskComplete(taskId);
+    } else if (deleteBtn) {
+      const taskId = deleteBtn.dataset.taskId;
+      this.deleteTask(taskId);
+    }
   }
 
   async handleFormSubmit(e) {
     e.preventDefault();
     try {
+      const taskTitle = document.getElementById("taskTitle");
+      const taskPriority = document.getElementById("taskPriority");
+      const taskCategory = document.getElementById("taskCategory");
+      const taskDueDate = document.getElementById("taskDueDate");
+
       const taskData = {
-        title: document.getElementById("taskTitle").value,
-        priority: document.getElementById("taskPriority").value,
-        category: document.getElementById("taskCategory").value,
-        dueDate: document.getElementById("taskDueDate").value,
+        title: taskTitle ? taskTitle.value : "",
+        priority: taskPriority ? taskPriority.value : "",
+        category: taskCategory ? taskCategory.value : "",
+        dueDate: taskDueDate ? taskDueDate.value : "",
         userId: "test-user",
       };
 
-      const response = await fetch("/api/tasks", {
+      const response = await fetch(`${this.apiUrl}/tasks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(taskData),
@@ -80,97 +119,98 @@ class TaskManager {
       this.showSuccess("Task created successfully");
     } catch (error) {
       this.showError("Failed to create task");
+      console.error(error);
     }
   }
 
   async loadTasks() {
     try {
-      const response = await fetch(`/api/tasks/user/test-user`);
+      const response = await fetch(`${this.apiUrl}/tasks/user/test-user`);
       if (!response.ok) throw new Error("Failed to load tasks");
       const tasks = await response.json();
       this.renderTasks(tasks);
     } catch (error) {
       this.showError("Failed to load tasks");
+      console.error(error);
     }
   }
 
   async handleFilter(button) {
-    const category = button.textContent.toLowerCase();
     try {
+      const buttonText = button.textContent.trim().toLowerCase();
+      const category = this.categoryMapping[buttonText] || buttonText;
+
       const response = await fetch(
-        `/api/tasks/user/test-user/filter?category=${category}`
+        `${this.apiUrl}/tasks/user/test-user/filter?category=${category}`
       );
+
       if (!response.ok) throw new Error("Failed to filter tasks");
 
       const tasks = await response.json();
       this.renderTasks(tasks);
 
+      // Update active state
       document
         .querySelectorAll(".btn-filter")
         .forEach((btn) => btn.classList.toggle("active", btn === button));
     } catch (error) {
       this.showError("Failed to filter tasks");
+      console.error(error);
     }
   }
 
   async toggleTaskComplete(taskId) {
     try {
-      const response = await fetch(`/api/tasks/${taskId}/toggle`, {
+      const response = await fetch(`${this.apiUrl}/tasks/${taskId}/toggle`, {
         method: "PATCH",
       });
       if (!response.ok) throw new Error("Failed to update task");
+
       await this.loadTasks();
       this.showSuccess("Task status updated");
     } catch (error) {
-      this.showError("Failed to update task");
+      this.showError("Failed to update task status");
+      console.error(error);
     }
   }
 
   async deleteTask(taskId) {
     try {
-      const response = await fetch(`/api/tasks/${taskId}`, {
+      const response = await fetch(`${this.apiUrl}/tasks/${taskId}`, {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Failed to delete task");
+
       await this.loadTasks();
       this.showSuccess("Task deleted successfully");
     } catch (error) {
       this.showError("Failed to delete task");
+      console.error(error);
+    }
+  }
+
+  showNotification(message, type) {
+    const alertDiv = document.createElement("div");
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+
+    const container = document.querySelector(".container");
+    const firstRow = container?.querySelector(".row");
+    if (container && firstRow) {
+      container.insertBefore(alertDiv, firstRow);
+      setTimeout(() => alertDiv.remove(), 3000);
     }
   }
 
   showError(message) {
-    const alertDiv = document.createElement("div");
-    alertDiv.className = "alert alert-danger alert-dismissible fade show";
-    alertDiv.innerHTML = `
-      ${message}
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    const container = document.querySelector(".container");
-    const firstRow = container.querySelector(".row");
-    if (firstRow) {
-      container.insertBefore(alertDiv, firstRow);
-    } else {
-      container.appendChild(alertDiv);
-    }
-    setTimeout(() => alertDiv.remove(), 3000);
+    this.showNotification(message, "danger");
   }
 
   showSuccess(message) {
-    const alertDiv = document.createElement("div");
-    alertDiv.className = "alert alert-success alert-dismissible fade show";
-    alertDiv.innerHTML = `
-      ${message}
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    const container = document.querySelector(".container");
-    const firstRow = container.querySelector(".row");
-    if (firstRow) {
-      container.insertBefore(alertDiv, firstRow);
-    } else {
-      container.appendChild(alertDiv);
-    }
-    setTimeout(() => alertDiv.remove(), 3000);
+    this.showNotification(message, "success");
   }
 
   getPriorityColor(priority) {
@@ -218,56 +258,40 @@ class TaskManager {
   formatDueDate(date) {
     const today = new Date();
     const dueDate = new Date(date);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
 
     if (dueDate.toDateString() === today.toDateString()) return "Today";
-    if (
-      dueDate.toDateString() ===
-      new Date(today.setDate(today.getDate() + 1)).toDateString()
-    )
-      return "Tomorrow";
-    if (
-      dueDate.toDateString() ===
-      new Date(today.setDate(today.getDate() - 1)).toDateString()
-    )
-      return "Yesterday";
+    if (dueDate.toDateString() === tomorrow.toDateString()) return "Tomorrow";
+    if (dueDate.toDateString() === yesterday.toDateString()) return "Yesterday";
     return dueDate.toLocaleDateString();
   }
 
   createTaskElement(task) {
     return `
-      <div class="card mb-3 task-item priority-${task.priority}${
-      task.completed ? " completed" : ""
-    }">
+      <div class="card mb-3 task-item priority-${task.priority}${task.completed ? " completed" : ""}">
         <div class="card-body d-flex justify-content-between align-items-center">
           <div>
-            <h5 class="card-title mb-1${task.completed ? " completed" : ""}">${
-      task.title
-    }</h5>
+            <h5 class="card-title mb-1${task.completed ? " completed" : ""}">${task.title}</h5>
             <small class="text-muted">
-              <i class="bi bi-calendar me-2"></i>${this.formatDueDate(
-                task.dueDate
-              )}
-              <span class="badge bg-${this.getPriorityColor(
-                task.priority
-              )} ms-2">
+              <i class="bi bi-calendar me-2"></i>${this.formatDueDate(task.dueDate)}
+              <span class="badge bg-${this.getPriorityColor(task.priority)} ms-2">
                 ${this.getPriorityLabel(task.priority)}
               </span>
-              <span class="badge bg-${this.getCategoryColor(
-                task.category
-              )} ms-2">
+              <span class="badge bg-${this.getCategoryColor(task.category)} ms-2">
                 ${this.getCategoryLabel(task.category)}
               </span>
             </small>
           </div>
           <div class="btn-group">
-            <button class="btn btn-outline-success btn-sm${
-              task.completed ? " active" : ""
-            }" 
-                    onclick="taskManager.toggleTaskComplete('${task._id}')">
+            <button class="btn btn-outline-success btn-sm${task.completed ? " active" : ""}" 
+                    data-task-id="${task._id}">
               <i class="bi bi-check-lg"></i>
             </button>
             <button class="btn btn-outline-danger btn-sm" 
-                    onclick="taskManager.deleteTask('${task._id}')">
+                    data-task-id="${task._id}">
               <i class="bi bi-trash"></i>
             </button>
           </div>
@@ -277,23 +301,24 @@ class TaskManager {
   }
 
   renderTasks(tasks) {
-    const taskList = document.querySelector(".row:last-child .col-md-8");
+    if (!this.taskList) return;
+
     if (tasks.length === 0) {
-      taskList.innerHTML = `
+      this.taskList.innerHTML = `
         <div class="alert alert-info">
           No tasks found. Add your first task above!
         </div>
       `;
       return;
     }
-    taskList.innerHTML = tasks
+
+    this.taskList.innerHTML = tasks
       .map((task) => this.createTaskElement(task))
       .join("");
   }
 }
 
-let taskManager;
+// Initialize TaskManager when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
-  taskManager = new TaskManager();
-  window.taskManager = taskManager;
+  window.taskManager = new TaskManager();
 });
