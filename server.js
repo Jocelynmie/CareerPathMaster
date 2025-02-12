@@ -1,9 +1,9 @@
+// server.js
 import express from "express";
 import cors from "cors";
-import { config } from "./config/config.js";
-import { connectDB } from "./config/database.js";
-import careerActivityRouter from "./routes/careerActivityRouter.js";
-import messageRoutes from "./routes/messageRoutes.js";
+import dbConnection from "./src/db/connection.js";
+import careerActivityRouter from "./src/routes/careerActivityRouter.js";
+import messageRoutes from "./src/routes/messageRoutes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -35,20 +35,13 @@ app.get("/", (req, res) => {
 });
 
 // Error handling middleware
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.error(err.stack);
   res.status(500).json({ message: "Something went wrong!" });
 });
 
 // Connect to database
-connectDB();
-
-// if (process.env.NODE_ENV !== "production") {
-//   const PORT = process.env.PORT || 3000;
-//   app.listen(PORT, () => {
-//     console.log(`Server is running on http://localhost:${PORT}`);
-//   });
-// }
+dbConnection.connectDB().catch(console.error);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
