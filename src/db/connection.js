@@ -30,7 +30,6 @@ export async function closeDB() {
   }
 }
 
-// 添加默认导出
 const dbConnection = {
   connectDB,
   closeDB,

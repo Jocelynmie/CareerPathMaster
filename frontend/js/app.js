@@ -4,7 +4,6 @@ class TaskManager {
     this.taskList = null;
     this.categoryMapping = {
       all: "all",
-      "job search": "job_search",
       applications: "applications",
       interviews: "interviews",
       "skill development": "skill_dev",
@@ -49,7 +48,6 @@ class TaskManager {
   getCategoryOptions() {
     return `
       <option value="">Select Category</option>
-      <option value="job_search">Job Search</option>
       <option value="applications">Applications</option>
       <option value="interviews">Interviews</option>
       <option value="skill_dev">Skill Development</option>
@@ -235,7 +233,6 @@ class TaskManager {
 
   getCategoryColor(category) {
     const colors = {
-      job_search: "primary",
       applications: "info",
       interviews: "warning",
       skill_dev: "success",
@@ -246,7 +243,6 @@ class TaskManager {
 
   getCategoryLabel(category) {
     const labels = {
-      job_search: "Job Search",
       applications: "Applications",
       interviews: "Interviews",
       skill_dev: "Skill Development",
