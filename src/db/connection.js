@@ -9,8 +9,8 @@ export async function connectDB() {
   try {
     if (db) return db;
 
-    const uri = process.env.MONGODB_URI || config.mongodb.uri;
-    client = await MongoClient.connect(uri);
+    // const uri = process.env.MONGODB_URI || config.mongodb.uri;
+    client = await MongoClient.connect(config.mongodb.uri);
     db = client.db(config.mongodb.dbName);
 
     console.log(`Connected to MongoDB database: ${config.mongodb.dbName}`);

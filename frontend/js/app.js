@@ -6,7 +6,7 @@ class TaskManager {
       all: "all",
       applications: "applications",
       interviews: "interviews",
-      "skill development": "skill_dev",
+      "skill development": "skills",
       networking: "networking",
     };
     this.init();
@@ -50,7 +50,7 @@ class TaskManager {
       <option value="">Select Category</option>
       <option value="applications">Applications</option>
       <option value="interviews">Interviews</option>
-      <option value="skill_dev">Skill Development</option>
+      <option value="skills">Skill Development</option>
       <option value="networking">Networking</option>
     `;
   }
@@ -235,7 +235,7 @@ class TaskManager {
     const colors = {
       applications: "info",
       interviews: "warning",
-      skill_dev: "success",
+      skills: "success",
       networking: "secondary",
     };
     return colors[category] || "secondary";
@@ -245,7 +245,7 @@ class TaskManager {
     const labels = {
       applications: "Applications",
       interviews: "Interviews",
-      skill_dev: "Skill Development",
+      skills: "Skill Development",
       networking: "Networking",
     };
     return labels[category] || category;
