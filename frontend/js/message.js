@@ -4,6 +4,7 @@ const messageList = document.getElementById("messageList");
 const prevButton = document.getElementById("prevButton");
 const nextButton = document.getElementById("nextButton");
 const submitButton = document.getElementById("submitButton");
+const currentPageSpan = document.getElementById("currentPage"); // 需要添加这个元素
 
 // Pagination variables
 let currentPage = 1;
@@ -26,9 +27,18 @@ async function fetchMessages(page = 1) {
   }
 }
 
+// Function to update pagination UI
+function updatePaginationUI(currentPage, totalPages) {
+  // 更新页码显示
+  currentPageSpan.textContent = `Page ${currentPage} of ${totalPages}`;
+  
+  // 更新按钮状态
+  prevButton.disabled = currentPage <= 1;
+  nextButton.disabled = currentPage >= totalPages;
+}
+
 // Function to display messages
 async function displayMessages() {
-  // Show loading state
   messageList.innerHTML = "<div class=\"loading\">Loading messages...</div>";
   try {
     const data = await fetchMessages(currentPage);
@@ -56,6 +66,9 @@ async function displayMessages() {
       `
       )
       .join("");
+
+    // 更新分页 UI
+    updatePaginationUI(data.currentPage, data.totalPages);
   } catch (error) {
     console.error("Error displaying messages:", error);
     messageList.innerHTML =
@@ -70,7 +83,6 @@ async function addMessage(event) {
 
   if (!content) return;
 
-  // Disable submit button and show loading state
   submitButton.disabled = true;
   submitButton.textContent = "Adding...";
 
@@ -87,8 +99,9 @@ async function addMessage(event) {
       throw new Error("Failed to add message");
     }
 
-    // Clear input and refresh messages
     messageInput.value = "";
+    // 发送新消息后返回第一页
+    currentPage = 1;
     await displayMessages();
 
     messageList.scrollTop = 0;
@@ -119,4 +132,5 @@ nextButton.addEventListener("click", async () => {
   }
 });
 
+// 初始化显示
 displayMessages();
