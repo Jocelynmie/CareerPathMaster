@@ -4,6 +4,11 @@
 
 A full-stack web application designed to help users manage their career development activities through task management and community support. Built with modern JavaScript and MongoDB, CareerPath offers a comprehensive solution for tracking job search activities and maintaining motivation through a shared message board.
 
+Website Link: https://github.com/Jocelynmie/CareerPathMaster
+Design Document: https://github.com/Jocelynmie/Personal-Home-Page/blob/main/Design%20Document.pdf
+Slides: https://docs.google.com/presentation/d/1UQQJ6df8m87xbNU-_o3mVFuwbP7Itq9NkcSIETTNBVU/edit#slide=id.g106ca8f30d1_0_0
+Video: https://youtu.be/iQILQlY6Ry0
+
 ## Features
 
 ### CareerPath Management System
@@ -53,6 +58,43 @@ A full-stack web application designed to help users manage their career developm
 - Vercel for frontend and backend hosting
 
 ## Code Architecture
+
+### Frontend Structure
+
+`/frontend`
+
+- `/css` - Contains stylesheets
+  - `main.css` - Global styles
+  - `message.css` - Message-specific styles
+- `/js` - JavaScript client-side code
+  - `app.js` - Main application logic
+  - `message.js` - Message handling functionality
+- HTML Templates
+  - `index.html` - Main application entry point
+  - `message.html` - Message view template
+
+### Backend Structure
+
+`/src`
+
+- `/config` - Configuration files
+  - `config.js` - Application configuration
+- `/db` - Database related files
+  - `/seeds` - Database seed files
+    - `seedMessage.js` - Message seeding logic
+  - `connection.js` - Database connection setup
+  - `indexes.js` - Database indexes
+  - `utils.js` - Database utilities
+- `/routes` - API routes
+  - `careerActivityRoutes.js` - Career activity endpoints
+  - `messageRoutes.js` - Message handling endpoints
+
+### Root Configuration Files
+
+- `server.js` - Main server entry point
+- `.env` - Environment variables
+- `vercel.json` - Vercel deployment configuration
+- `package.json` - Project dependencies and scripts
 
 ## API Endpoints
 
