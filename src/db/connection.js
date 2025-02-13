@@ -26,7 +26,7 @@ export async function closeDB() {
     await client.close();
     db = null;
     client = null;
-    console.log("Database connection closed");
+    // console.log("Database connection closed");
   }
 }
 

@@ -1,6 +1,6 @@
 // server.js
 import express from "express";
-import cors from "cors";
+// import cors from "cors";
 import dbConnection from "./src/db/connection.js";
 import careerActivityRouter from "./src/routes/careerActivityRouter.js";
 import messageRoutes from "./src/routes/messageRoutes.js";
@@ -13,16 +13,17 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Middleware
-app.use(
-  cors({
-    origin:
-      process.env.NODE_ENV === "production"
-        ? ["https://careerpath.vercel.app"]
-        : ["http://localhost:3000"],
-    credentials: true,
-  })
-);
-app.use(express.json());
+// app.use(
+//   cors({
+//     origin:
+//       process.env.NODE_ENV === "production"
+//         ? ["https://careerpath.vercel.app"]
+//         : ["http://localhost:3000"],
+//     credentials: true,
+//   })
+// );
+// app.use(express.json());
+app.use("/api", express.json());
 app.use(express.static(path.join(__dirname, "frontend")));
 
 // Routes
@@ -34,10 +35,13 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "frontend", "index.html"));
 });
 
-// Error handling middleware
-app.use((err, req, res) => {
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
+
+app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: "Something went wrong!" });
+  res.status(500).json({ message: "Internal Server Error" });
 });
 
 // Connect to database

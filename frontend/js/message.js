@@ -3,7 +3,6 @@ const messageInput = document.getElementById("messageInput");
 const messageList = document.getElementById("messageList");
 const prevButton = document.getElementById("prevButton");
 const nextButton = document.getElementById("nextButton");
-const pageInfo = document.getElementById("pageInfo");
 const submitButton = document.getElementById("submitButton");
 
 // Pagination variables
@@ -30,7 +29,7 @@ async function fetchMessages(page = 1) {
 // Function to display messages
 async function displayMessages() {
   // Show loading state
-  messageList.innerHTML = '<div class="loading">Loading messages...</div>';
+  messageList.innerHTML = "<div class=\"loading\">Loading messages...</div>";
   try {
     const data = await fetchMessages(currentPage);
 
@@ -60,7 +59,7 @@ async function displayMessages() {
   } catch (error) {
     console.error("Error displaying messages:", error);
     messageList.innerHTML =
-      '<div class="error">Error loading messages. Please try again later.</div>';
+      "<div class=\"error\">Error loading messages. Please try again later.</div>";
   }
 }
 

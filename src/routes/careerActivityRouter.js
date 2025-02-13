@@ -1,19 +1,18 @@
 import express from "express";
-import { MongoClient, ObjectId } from "mongodb";
-import { config } from "../config/config.js";
+import { ObjectId } from "mongodb";
+// import { config } from "../config/config.js";
+import { connectDB } from "../db/connection.js";
+import { closeDB } from "../db/connection.js";
+// import { nextTick } from "process";
 
 const router = express.Router();
 
 // Add task
-router.post("/", async (req, res) => {
-  let client;
+router.post("/", async (req, res, next) => {
+  // let client;
   try {
     const { title, priority, category, dueDate, userId } = req.body;
-
-    // Connect to database
-    const uri = process.env.MONGODB_URI || config.mongodb.uri;
-    client = await MongoClient.connect(uri);
-    const db = client.db(config.mongodb.dbName);
+    const db = await connectDB(); // Connect to database
 
     const task = {
       title,
@@ -31,25 +30,20 @@ router.post("/", async (req, res) => {
       taskId: result.insertedId,
     });
   } catch (error) {
-    console.error("Failed to create task:", error);
-    res.status(500).json({ message: "Failed to create task" });
+    next(error);
   } finally {
-    if (client) {
-      await client.close();
-      console.log("Database connection closed");
-    }
+    await closeDB();
+    // console.log("Database connection closed");
   }
 });
 
 // Get user's tasks
-router.get("/user/:userId", async (req, res) => {
-  let client;
+router.get("/user/:userId", async (req, res, next) => {
+  // let client;
   try {
     const { userId } = req.params;
 
-    const uri = process.env.MONGODB_URI || config.mongodb.uri;
-    client = await MongoClient.connect(uri);
-    const db = client.db(config.mongodb.dbName);
+    const db = await connectDB(); // Connect to database
 
     const tasks = await db
       .collection("tasks")
@@ -59,25 +53,19 @@ router.get("/user/:userId", async (req, res) => {
 
     res.json(tasks);
   } catch (error) {
-    console.error("Failed to get tasks:", error);
-    res.status(500).json({ message: "Failed to get tasks" });
+    next(error);
   } finally {
-    if (client) {
-      await client.close();
-      console.log("Database connection closed");
-    }
+    await closeDB();
+    // console.log("Database connection closed");
   }
 });
 
 // Toggle task status
-router.patch("/:taskId/toggle", async (req, res) => {
-  let client;
+router.patch("/:taskId/toggle", async (req, res, next) => {
+  // let client;
   try {
     const { taskId } = req.params;
-
-    const uri = process.env.MONGODB_URI || config.mongodb.uri;
-    client = await MongoClient.connect(uri);
-    const db = client.db(config.mongodb.dbName);
+    const db = await connectDB(); // Connect to database
 
     const task = await db.collection("tasks").findOne({
       _id: new ObjectId(taskId),
@@ -96,25 +84,19 @@ router.patch("/:taskId/toggle", async (req, res) => {
 
     res.json({ message: "Task status updated successfully" });
   } catch (error) {
-    console.error("Failed to update task status:", error);
-    res.status(500).json({ message: "Failed to update task status" });
+    next(error);
   } finally {
-    if (client) {
-      await client.close();
-      console.log("Database connection closed");
-    }
+    await closeDB();
   }
 });
 
 // Delete task
-router.delete("/:taskId", async (req, res) => {
-  let client;
+router.delete("/:taskId", async (req, res, next) => {
+  // let client;
   try {
     const { taskId } = req.params;
 
-    const uri = process.env.MONGODB_URI || config.mongodb.uri;
-    client = await MongoClient.connect(uri);
-    const db = client.db(config.mongodb.dbName);
+    const db = await connectDB(); // Connect to database
 
     const result = await db.collection("tasks").deleteOne({
       _id: new ObjectId(taskId),
@@ -126,26 +108,20 @@ router.delete("/:taskId", async (req, res) => {
 
     res.json({ message: "Task deleted successfully" });
   } catch (error) {
-    console.error("Failed to delete task:", error);
-    res.status(500).json({ message: "Failed to delete task" });
+    next(error);
   } finally {
-    if (client) {
-      await client.close();
-      console.log("Database connection closed");
-    }
+    await closeDB();
   }
 });
 
 // Filter tasks
-router.get("/user/:userId/filter", async (req, res) => {
-  let client;
+router.get("/user/:userId/filter", async (req, res, next) => {
+  // let client;
   try {
     const { userId } = req.params;
     const { category } = req.query;
 
-    const uri = process.env.MONGODB_URI || config.mongodb.uri;
-    client = await MongoClient.connect(uri);
-    const db = client.db(config.mongodb.dbName);
+    const db = await connectDB(); // Connect to database
 
     const query = category === "all" ? { userId } : { userId, category };
 
@@ -157,13 +133,9 @@ router.get("/user/:userId/filter", async (req, res) => {
 
     res.json(tasks);
   } catch (error) {
-    console.error("Failed to filter tasks:", error);
-    res.status(500).json({ message: "Failed to filter tasks" });
+    next(error);
   } finally {
-    if (client) {
-      await client.close();
-      console.log("Database connection closed");
-    }
+    await closeDB();
   }
 });
 
