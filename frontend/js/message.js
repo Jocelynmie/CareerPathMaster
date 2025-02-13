@@ -28,18 +28,15 @@ async function fetchMessages(page = 1) {
 }
 
 // Function to update pagination UI
+
 function updatePaginationUI(currentPage, totalPages) {
-  // 更新页码显示
-  currentPageSpan.textContent = `Page ${currentPage} of ${totalPages}`;
-  
-  // 更新按钮状态
   prevButton.disabled = currentPage <= 1;
   nextButton.disabled = currentPage >= totalPages;
 }
 
 // Function to display messages
 async function displayMessages() {
-  messageList.innerHTML = "<div class=\"loading\">Loading messages...</div>";
+  messageList.innerHTML = '<div class="loading">Loading messages...</div>';
   try {
     const data = await fetchMessages(currentPage);
 
@@ -72,7 +69,7 @@ async function displayMessages() {
   } catch (error) {
     console.error("Error displaying messages:", error);
     messageList.innerHTML =
-      "<div class=\"error\">Error loading messages. Please try again later.</div>";
+      '<div class="error">Error loading messages. Please try again later.</div>';
   }
 }
 
