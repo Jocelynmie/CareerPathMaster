@@ -1,14 +1,11 @@
 import express from "express";
-// import { MongoClient } from "mongodb";
-// import { config } from "../config/config.js";
 import { connectDB } from "../db/connection.js";
-import { closeDB } from "../db/connection.js";
+// 移除 closeDB 的导入，因为我们不需要在每次请求后关闭连接
 
 const router = express.Router();
 
 // Get messages with pagination
 router.get("/", async (req, res, next) => {
-  // let client;
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 5;
@@ -35,14 +32,12 @@ router.get("/", async (req, res, next) => {
     });
   } catch (error) {
     next(error);
-  } finally {
-    await closeDB();
   }
+  // 移除 finally 块，不要关闭连接
 });
 
 // Add new message
 router.post("/", async (req, res, next) => {
-  // let client;
   try {
     const { content } = req.body;
     if (!content) {
@@ -59,9 +54,8 @@ router.post("/", async (req, res, next) => {
     res.status(201).json({ ...newMessage, _id: result.insertedId });
   } catch (error) {
     next(error);
-  } finally {
-    await closeDB();
   }
+  // 移除 finally 块，不要关闭连接
 });
 
 export default router;
