@@ -3,8 +3,11 @@
 ## Overview
 
 Website Link: https://github.com/Jocelynmie/CareerPathMaster
-Design Document:
+
+Design Document: https://github.com/Jocelynmie/CareerPathMaster/blob/main/DesignDoc/Design%20Document.pdf
+
 Slides: https://docs.google.com/presentation/d/1kPnJbBAn62iAnwKnmaITFbUKJ0F1iTxdJnqqrcXhzvY/edit#slide=id.g334b29309df_0_320
+
 Video:
 
 ## Class Link
@@ -232,8 +235,8 @@ npm run build
 
 ## Screenshots
 
-https://github.com/Jocelynmie/CareerPathMaster/blob/main/mockup_pic/Screenshot%202025-02-11%20at%203.04.48%E2%80%AFPM.png
-https://github.com/Jocelynmie/CareerPathMaster/blob/main/mockup_pic/Screenshot%202025-02-11%20at%203.06.08%E2%80%AFPM.png
+![Screenshot 1](/Users/yangwenyu/Desktop/webdep/project2/CareerPath/screenshot/Screenshot 2025-02-13 at 8.38.43 PM.png)
+![Screenshot 2](/Users/yangwenyu/Desktop/webdep/project2/CareerPath/screenshot/Screenshot 2025-02-13 at 8.39.16 PM.png)
 
 ## Author
 
