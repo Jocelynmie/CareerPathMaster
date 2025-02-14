@@ -235,8 +235,8 @@ npm run build
 
 ## Screenshots
 
-![Screenshot 1](/Users/yangwenyu/Desktop/webdep/project2/CareerPath/screenshot/Screenshot 2025-02-13 at 8.38.43 PM.png)
-![Screenshot 2](/Users/yangwenyu/Desktop/webdep/project2/CareerPath/screenshot/Screenshot 2025-02-13 at 8.39.16 PM.png)
+![Screenshot 1](./screenshot/Screenshot%202025-02-13%20at%208.38.43 PM.png)
+![Screenshot 2](./screenshot/Screenshot%202025-02-13%20at%208.39.16 PM.png)
 
 ## Author
 
