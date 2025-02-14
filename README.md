@@ -2,12 +2,18 @@
 
 ## Overview
 
-A full-stack web application designed to help users manage their career development activities through task management and community support. Built with modern JavaScript and MongoDB, CareerPath offers a comprehensive solution for tracking job search activities and maintaining motivation through a shared message board.
-
 Website Link: https://github.com/Jocelynmie/CareerPathMaster
-Design Document: https://github.com/Jocelynmie/Personal-Home-Page/blob/main/Design%20Document.pdf
-Slides: https://docs.google.com/presentation/d/1UQQJ6df8m87xbNU-_o3mVFuwbP7Itq9NkcSIETTNBVU/edit#slide=id.g106ca8f30d1_0_0
-Video: https://youtu.be/iQILQlY6Ry0
+Design Document:
+Slides: https://docs.google.com/presentation/d/1kPnJbBAn62iAnwKnmaITFbUKJ0F1iTxdJnqqrcXhzvY/edit#slide=id.g334b29309df_0_320
+Video:
+
+## Class Link
+
+https://johnguerra.co/classes/webDevelopment_spring_2025/
+
+## Project Object
+
+A full-stack web application designed to help users manage their career development activities through task management and community support. Built with modern JavaScript and MongoDB, CareerPath offers a comprehensive solution for tracking job search activities and maintaining motivation through a shared message board.
 
 ## Features
 
@@ -131,6 +137,54 @@ POST /api/messages    # Create new message
 - Messages Collection:
   - messages_createdAt_index
 
+## Describe any use of GenAI
+
+## Models & Technologies
+
+- Used Claude 3.5 Sonnet and ChatGPT to develop and understand key concepts. Key interactions included:
+
+1. Project Setup & Deployment
+
+   - Prompt used: "How to develop my backend and frontend on Vercel"
+   - How it was used: Followed Claude's instructions to set up the project structure and configure vercel.json for proper deployment
+   - Implementation steps:
+     - Setting up project directory structure
+     - Configuring vercel.json for deployment
+     - Implementing server-side and client-side code separation
+
+2. MongoDB Concepts
+
+   - Prompt used: "What is ObjectId and why can't I use string directly in MongoDB operations?"
+   - How it was used: Understanding the fundamental concepts of MongoDB's ObjectId and its importance in database operations
+   - Key learnings:
+     - ObjectId's structure and purpose
+     - Why string conversion is necessary for database queries
+
+3. CORS Understanding
+
+   - Topic: Cross-Origin Resource Sharing (CORS)
+   - Key learning: Learned that CORS configuration wasn't necessary for this project since frontend and backend share the same PORT
+   - Implementation impact:
+     - Simplified server setup without CORS middleware
+     - Better understanding of when CORS is actually needed
+
+4. Database Seeding
+
+   - Prompt used: Request for help with generating message seeds
+   - How it was used: Claude provided code to generate 1000 sample messages for testing
+   - Implementation:
+     - Created seedMessage.js
+     - Generated realistic test data
+     - Implemented seeding script
+
+5. MongoDB Operations
+   - Platform used: ChatGPT
+   - Topic: Understanding MongoDB operation results
+   - Key learnings:
+     - Understanding the `result` object structure
+     - InsertOneResult properties and usage
+     - How to properly handle database operation responses
+
 ## Installation
 
 1. Clone the repository:
@@ -176,18 +230,14 @@ npm run dev
 npm run build
 ```
 
-## Future Enhancements
+## Screenshots
 
-1. User authentication system
-2. Task reminder notifications
-3. Analytics dashboard
-4. CSV export functionality
-5. Mobile application
-6. Integration with job posting APIs
+https://github.com/Jocelynmie/CareerPathMaster/blob/main/mockup_pic/Screenshot%202025-02-11%20at%203.04.48%E2%80%AFPM.png
+https://github.com/Jocelynmie/CareerPathMaster/blob/main/mockup_pic/Screenshot%202025-02-11%20at%203.06.08%E2%80%AFPM.png
 
 ## Author
 
 Wenyu Yang
 
-- GitHub:
+- GitHub:https://github.com/Jocelynmie
 - Email: jocelynmiemie@gmail.com
