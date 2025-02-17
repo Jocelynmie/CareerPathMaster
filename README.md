@@ -2,13 +2,20 @@
 
 ## Overview
 
-Website Link: https://github.com/Jocelynmie/CareerPathMaster
+Website Link: https://careerpath-nine.vercel.app/
 
 Design Document: https://github.com/Jocelynmie/CareerPathMaster/blob/main/DesignDoc/Design%20Document.pdf
 
 Slides: https://docs.google.com/presentation/d/1kPnJbBAn62iAnwKnmaITFbUKJ0F1iTxdJnqqrcXhzvY/edit#slide=id.g334b29309df_0_320
 
-Video:
+Video: https://www.youtube.com/watch?v=MGpydb42VDo
+
+## Author
+
+Wenyu Yang
+
+- GitHub:https://github.com/Jocelynmie
+- Email: jocelynmiemiemie@gmail.com
 
 ## Class Link
 
@@ -41,6 +48,7 @@ A full-stack web application designed to help users manage their career developm
 - Chronological message display
 - Loading state management
 - Error handling and feedback
+- Initialized with 1000+ messages in database
 
 ## Technical Stack
 
@@ -61,7 +69,6 @@ A full-stack web application designed to help users manage their career developm
 
 ### Development Tools
 
-- CORS for cross-origin resource sharing
 - dotenv for environment management
 - MongoDB Atlas for database hosting
 - Vercel for frontend and backend hosting
@@ -135,7 +142,7 @@ POST /api/messages    # Create new message
   - createdAt_index
   - userId_dueDate_index
   - userId_priority_index
-  - text_search_index (on title field)
+  - text_search_index
 
 - Messages Collection:
   - messages_createdAt_index
@@ -236,10 +243,3 @@ npm run build
 
 ![Screenshot 1](./screenshot/Screenshot%202025-02-13%20at%208.38.43 PM.png)
 ![Screenshot 2](./screenshot/Screenshot%202025-02-13%20at%208.39.16 PM.png)
-
-## Author
-
-Wenyu Yang
-
-- GitHub:https://github.com/Jocelynmie
-- Email: jocelynmiemie@gmail.com
