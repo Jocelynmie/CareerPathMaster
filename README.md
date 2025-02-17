@@ -210,7 +210,6 @@ npm install
 PORT=3000
 MONGODB_URI=your_mongodb_connection_string
 DB_NAME=careerpath
-NODE_ENV=development
 ```
 
 4. Start the application:

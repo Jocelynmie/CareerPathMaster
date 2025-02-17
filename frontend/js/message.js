@@ -4,7 +4,7 @@ const messageList = document.getElementById("messageList");
 const prevButton = document.getElementById("prevButton");
 const nextButton = document.getElementById("nextButton");
 const submitButton = document.getElementById("submitButton");
-const currentPageSpan = document.getElementById("currentPage"); // 需要添加这个元素
+// const currentPageSpan = document.getElementById("currentPage");
 
 // Pagination variables
 let currentPage = 1;
@@ -36,7 +36,7 @@ function updatePaginationUI(currentPage, totalPages) {
 
 // Function to display messages
 async function displayMessages() {
-  messageList.innerHTML = '<div class="loading">Loading messages...</div>';
+  // messageList.innerHTML = '<div class="loading">Loading messages...</div>';
   try {
     const data = await fetchMessages(currentPage);
 
@@ -64,12 +64,11 @@ async function displayMessages() {
       )
       .join("");
 
-    // 更新分页 UI
     updatePaginationUI(data.currentPage, data.totalPages);
   } catch (error) {
     console.error("Error displaying messages:", error);
-    messageList.innerHTML =
-      '<div class="error">Error loading messages. Please try again later.</div>';
+    // messageList.innerHTML =
+    // '<div class="error">Error loading messages. Please try again later.</div>';
   }
 }
 
@@ -97,7 +96,6 @@ async function addMessage(event) {
     }
 
     messageInput.value = "";
-    // 发送新消息后返回第一页
     currentPage = 1;
     await displayMessages();
 
@@ -129,5 +127,5 @@ nextButton.addEventListener("click", async () => {
   }
 });
 
-// 初始化显示
+// Initial display
 displayMessages();

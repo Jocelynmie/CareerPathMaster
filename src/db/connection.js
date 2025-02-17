@@ -1,26 +1,3 @@
-// src/db/connection.js
-// import { MongoClient } from "mongodb";
-// import { config } from "../config/config.js";
-
-// let db = null;
-// let client = null;
-
-// export async function connectDB() {
-//   try {
-//     if (db) return db;
-
-//     // const uri = process.env.MONGODB_URI || config.mongodb.uri;
-//     client = await MongoClient.connect(config.mongodb.uri);
-//     db = client.db(config.mongodb.dbName);
-
-//     console.log(`Connected to MongoDB database: ${config.mongodb.dbName}`);
-//     return db;
-//   } catch (error) {
-//     console.error("MongoDB connection error:", error);
-//     throw error;
-//   }
-// }
-// connection.js
 import { MongoClient } from "mongodb";
 import { config } from "../config/config.js";
 
@@ -33,14 +10,11 @@ export async function connectDB() {
       return db;
     }
 
-    console.log("Initializing database connection...");
-    client = await MongoClient.connect(config.mongodb.uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    // console.log("Initializing database connection...");
+    client = await MongoClient.connect(config.mongodb.uri);
 
     db = client.db(config.mongodb.dbName);
-    console.log(`Connected to database: ${config.mongodb.dbName}`);
+    // console.log(`Connected to database: ${config.mongodb.dbName}`);
 
     return db;
   } catch (error) {
