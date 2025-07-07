@@ -8,7 +8,6 @@ Design Document: https://github.com/Jocelynmie/CareerPathMaster/blob/main/Design
 
 Slides: https://docs.google.com/presentation/d/1kPnJbBAn62iAnwKnmaITFbUKJ0F1iTxdJnqqrcXhzvY/edit#slide=id.g334b29309df_0_320
 
-Video: https://www.youtube.com/watch?v=MGpydb42VDo
 
 ## Author
 
